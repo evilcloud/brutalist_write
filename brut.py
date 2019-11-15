@@ -4,10 +4,10 @@ from datetime import datetime
 
 def save(line, file_name):
     with open(str(file_name) + ".md", "a") as file:
-        file.write(line + "<br/>")
+        file.write(line + "\n")
     current_timestamp = datetime.timestamp(datetime.now())
     with open("zed" + str(file_name) + ".ser", "a") as service_file:
-        service_file.write(str(str(current_timestamp) + "<br/>"))
+        service_file.write(str(str(current_timestamp) + "\n"))
     return
 
 def help_screen():
