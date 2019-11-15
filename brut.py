@@ -2,26 +2,34 @@ from subprocess import call
 from os import name as osname
 from datetime import datetime
 
-def parse_markdown(line):
-    return line
-
 def save(line, file_name):
     with open(str(file_name) + ".md", "a") as file:
-        file.write(line + "\n")
+        file.write(line + "<br/>")
     current_timestamp = datetime.timestamp(datetime.now())
     with open("zed" + str(file_name) + ".ser", "a") as service_file:
-        service_file.write(str(str(current_timestamp) + "\n"))
+        service_file.write(str(str(current_timestamp) + "<br/>"))
     return
 
+def help_screen():
+    print("""
+          
+          BRUTALIST HELP MENU
+          
+          quit() or .....
+          help() or ?????
+          
+          no SAVE necessary, as
+          the texts saves line-by-line""")
+    return
 
-def save_no_parse(line):
-    pass
-
-
-def quit(line):
-    yes = ["quit()", "let me out of here", "....."]
-    if line in yes:
+def menu(line):
+    quit_command = ["quit()", "....."]
+    help_command = ["help()", "?????"]
+    if line in quit_command:
         return True
+    elif line in help_command:
+        print(help_screen())
+        return False
     return False
 
 def clear_screen():
@@ -32,13 +40,13 @@ def clear_screen():
 # MAIN
 clear_screen()
 file_name = datetime.timestamp(datetime.now())
+save("", file_name)
 
 while True:
     line = input("    ")
     print("\n\n")
-    if quit(line):
+    save(line, file_name)
+    if menu(line):
         break
-    parsed_line = parse_markdown(line)
-    save(parsed_line, file_name)
 print("bye")
 
