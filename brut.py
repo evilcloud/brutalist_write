@@ -53,7 +53,9 @@ def menu(line):
         help_screen()
     elif line in stats_command:
         stat_screen()
-    return # somewhere here the ??? needs work
+    else:
+        return True # was a true line, not a command
+    return False # this was a command line
 
 
 def humanise_timedelta(td):
@@ -96,6 +98,5 @@ while True:
     line = input("    ")
     print("\n\n")
     if menu(line):
-        line = None
-    save(line)
+        save(line)
 
