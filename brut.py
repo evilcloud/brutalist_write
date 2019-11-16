@@ -53,7 +53,7 @@ def menu(line):
         help_screen()
     elif line in stats_command:
         stat_screen()
-    return
+    return # somewhere here the ??? needs work
 
 
 def humanise_timedelta(td):
@@ -73,7 +73,8 @@ def humanise_timedelta(td):
 
 
 def session_duration():
-    """Returns [str] "session duration: XX:XX:XX:XXXXXX"""
+    """Returns [str] "session duration: [huminized time]
+    gets data from [huminise_timedelta]"""
     sess_dur = datetime.now() - start_time
     return "session duration: " + humanise_timedelta(sess_dur)
 
@@ -94,6 +95,7 @@ save("")
 while True:
     line = input("    ")
     print("\n\n")
-    menu(line)
+    if menu(line):
+        line = None
     save(line)
 
