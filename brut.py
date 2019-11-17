@@ -2,6 +2,45 @@ from subprocess import call
 from os import name as osname
 from datetime import date, datetime
 
+# CONFIG
+global start_time
+global file_name_component
+start_time = datetime.now()
+file_name_component = str(start_time)
+file_name_component = file_name_component[:10]
+
+# FILE FUNCTIONS
+def save_txt(line):
+    file_name = "bas" + file_name_component + ".txt"
+    with open(file_name, "a") as text_file:
+        text_file.write(line)
+    return
+
+def save_git_md(line):
+    file_name = "gmd" + file_name_component + ".md"
+    with open(file_name, "a") as gitmd_file:
+        gitmd_file.write(line + "<br/>")
+    return
+
+def save_vanila_md(line):
+    file_name = "vmd" + file_name_component + ".md"
+    with open(file_name, "a") as vanmd_file:
+        vanmd_file.write(line)
+    return
+
+def register_timedata():
+    file_name = "tds" + file_name_component + ".ser"
+    with open(file_name, "a") as time_file:
+        time_file.write(datetime.timestamp(datetime.now()))
+    return
+
+def oversharing_gmd(line):
+    file_name = "ooo" + file_name_component + ".md"
+    with open(file_name, "a") as overshare:
+        overshare.write("    " + line + "<br/>")
+        overshare.write(humanise_timedelta(datetime.now()-start_time))
+    return
+    
 
 def save(line):
     file_name = "dbrut" + str(date.today())
@@ -86,10 +125,9 @@ def clear_screen():
     return
 
 
-# humanise_timedelta(datetime.now())
 # MAIN
-global start_time
-start_time = datetime.now()
+
+
 clear_screen()
 save("***")
 save("[" + str(datetime.now()) + "]")
