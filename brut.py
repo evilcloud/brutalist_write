@@ -8,14 +8,13 @@ from datetime import date, datetime
 global start_time
 global file_name_component
 start_time = datetime.now()
-file_name_component = str(start_time)
-file_name_component = file_name_component[:10]
+file_name_component = str(start_time.date())
 
 # FILE FUNCTIONS
 def save_txt(line):
     file_name = "bas" + file_name_component + ".txt"
     with open(file_name, "a") as text_file:
-        text_file.write(line)
+        text_file.write(line + "\n")
     return
 
 def save_git_md(line):
@@ -33,7 +32,7 @@ def save_vanila_md(line):
 def register_timedata():
     file_name = "tds" + file_name_component + ".ser"
     with open(file_name, "a") as time_file:
-        time_file.write(str(datetime.timestamp(datetime.now())))
+        time_file.write(str(datetime.timestamp(datetime.now())) + "\n")
     return
 
 def save_oversharing(line):
@@ -44,11 +43,15 @@ def save_oversharing(line):
     return
     
 def save_to_all_files(line):
-    save_txt("line")
-    save_except_txt(line)
+    save_txt(line)
+    save_git_md(line)
+    save_vanila_md(line)
+    save_oversharing(line)
+    register_timedata()
     return
     
 def save_except_txt(line):
+    save_txt("")
     save_git_md(line)
     save_vanila_md(line)
     save_oversharing(line)
@@ -63,7 +66,7 @@ def check_file_exists(file_name):
     return False
     
 def quit_app():
-    save_to_all_files("---")
+    save_to_all_files("⌹")
     print("   " + session_duration())
     print("\nbye")
     quit()
@@ -135,18 +138,17 @@ def session_duration():
     return "session duration: " + humanise_timedelta(sess_dur)
 
 
-
+# PLEASE SORT OUT THIS MESS!!!!!!   
 def first_line(check_file):
     if os.path.exists(check_file):
-        opening_line = "⌷   " # DOESN'T WORK NOW + str(datetime.now().strptime("%A, %e %B %G  %H:%M:%S"))
+        opening_line = "⌸" + " "*15 + str(start_time.time().replace(microsecond=0))
     else:
-        opening_line = "⌸ "
+        opening_line = "⌷   " + str(start_time.replace(microsecond=0))
     return opening_line
 
 # MAIN
 # INITIALIZE
 clear_screen()
-save_to_all_files("")
 save_except_txt(first_line("tds" + file_name_component + ".ser"))
 save_to_all_files("")
 
@@ -156,4 +158,3 @@ while True:
     print("\n\n")
     if menu(line):
         save_to_all_files(line)
-
