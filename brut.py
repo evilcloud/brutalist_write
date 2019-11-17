@@ -31,25 +31,32 @@ def save_vanila_md(line):
 def register_timedata():
     file_name = "tds" + file_name_component + ".ser"
     with open(file_name, "a") as time_file:
-        time_file.write(datetime.timestamp(datetime.now()))
+        time_file.write(str(datetime.timestamp(datetime.now())))
     return
 
-def oversharing_gmd(line):
+def save_oversharing(line):
     file_name = "ooo" + file_name_component + ".md"
     with open(file_name, "a") as overshare:
         overshare.write("    " + line + "<br/>")
         overshare.write(humanise_timedelta(datetime.now()-start_time))
     return
     
-
 def save(line):
-    file_name = "dbrut" + str(date.today())
-    with open(file_name + ".md", "a") as file:
-        file.write(line + "\n")
-    current_timestamp = datetime.timestamp(datetime.now())
-    with open("zed" + file_name + ".ser", "a") as service_file:
-        service_file.write(str(str(current_timestamp) + "\n"))
+    save_txt(line)
+    save_git_md(line)
+    save_vanila_md(line)
+    save_oversharing(line)
+    register_timedata()
     return
+    
+# def save(line):
+#     file_name = "dbrut" + str(date.today())
+#     with open(file_name + ".md", "a") as file:
+#         file.write(line + "\n")
+#     current_timestamp = datetime.timestamp(datetime.now())
+#     with open("zed" + file_name + ".ser", "a") as service_file:
+#         service_file.write(str(str(current_timestamp) + "\n"))
+#     return
 
 
 def quit_app():
