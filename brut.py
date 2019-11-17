@@ -41,7 +41,13 @@ def save_oversharing(line):
         overshare.write("    " + line + "<br/>")
         overshare.write(humanise_timedelta(datetime.now()-start_time))
     return
-    
+
+# TO BE COMPLETED TOMORROW
+def saving_process(final_line, file_name):
+    with open(file_name, "a") as target_file:
+        target_file.write(final_line)
+    return
+
 def save_to_all_files(line):
     save_txt(line)
     save_git_md(line)
@@ -59,12 +65,6 @@ def save_except_txt(line):
     return
 
 # SYSTEM
-def check_file_exists(file_name):
-    file_exists = ospath(file_name)
-    if file_exists:
-        return True
-    return False
-    
 def quit_app():
     save_to_all_files("⌹")
     print("   " + session_duration())
@@ -138,7 +138,6 @@ def session_duration():
     return "session duration: " + humanise_timedelta(sess_dur)
 
 
-# PLEASE SORT OUT THIS MESS!!!!!!   
 def first_line(check_file):
     if os.path.exists(check_file):
         opening_line = "⌸" + " "*15 + str(start_time.time().replace(microsecond=0))
