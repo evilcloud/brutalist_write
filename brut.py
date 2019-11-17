@@ -1,5 +1,7 @@
 from subprocess import call
 from os import name as osname
+from os import path as ospath
+import os.path
 from datetime import date, datetime
 
 # CONFIG
@@ -25,7 +27,7 @@ def save_git_md(line):
 def save_vanila_md(line):
     file_name = "vmd" + file_name_component + ".md"
     with open(file_name, "a") as vanmd_file:
-        vanmd_file.write(line)
+        vanmd_file.write(line + "\n")
     return
 
 def register_timedata():
@@ -41,31 +43,36 @@ def save_oversharing(line):
         overshare.write(humanise_timedelta(datetime.now()-start_time))
     return
     
-def save(line):
-    save_txt(line)
+def save_to_all_files(line):
+    save_txt("line")
+    save_except_txt(line)
+    return
+    
+def save_except_txt(line):
     save_git_md(line)
     save_vanila_md(line)
     save_oversharing(line)
     register_timedata()
     return
+
+# SYSTEM
+def check_file_exists(file_name):
+    file_exists = ospath(file_name)
+    if file_exists:
+        return True
+    return False
     
-# def save(line):
-#     file_name = "dbrut" + str(date.today())
-#     with open(file_name + ".md", "a") as file:
-#         file.write(line + "\n")
-#     current_timestamp = datetime.timestamp(datetime.now())
-#     with open("zed" + file_name + ".ser", "a") as service_file:
-#         service_file.write(str(str(current_timestamp) + "\n"))
-#     return
-
-
 def quit_app():
-    save("---")
+    save_to_all_files("---")
     print("   " + session_duration())
     print("\nbye")
     quit()
 
+def clear_screen():
+    _ = call("cls" if osname == "nt" else "clear")
+    return
 
+# MENU
 def help_screen():
     print(
         """
@@ -90,7 +97,7 @@ def stat_screen():
 
 
 def menu(line):
-    quit_command = ["quit()", "....."]
+    quit_command = ["quit()", "exit()", "....."]
     help_command = ["help()", "?????"]
     stats_command = ["stats()", "/////"]
     if line in quit_command:
@@ -104,6 +111,7 @@ def menu(line):
     return False # this was a command line
 
 
+# DATAPROC
 def humanise_timedelta(td):
     days = td.days
     hours, remainder = divmod(td.seconds, 3600)
@@ -127,21 +135,25 @@ def session_duration():
     return "session duration: " + humanise_timedelta(sess_dur)
 
 
-def clear_screen():
-    _ = call("cls" if osname == "nt" else "clear")
-    return
 
+def first_line(check_file):
+    if os.path.exists(check_file):
+        opening_line = "⌷   " # DOESN'T WORK NOW + str(datetime.now().strptime("%A, %e %B %G  %H:%M:%S"))
+    else:
+        opening_line = "⌸ "
+    return opening_line
 
 # MAIN
-
-
+# INITIALIZE
 clear_screen()
-save("***")
-save("[" + str(datetime.now()) + "]")
-save("")
+save_to_all_files("")
+save_except_txt(first_line("tds" + file_name_component + ".ser"))
+save_to_all_files("")
+
+# TEXT ENTRY
 while True:
     line = input("    ")
     print("\n\n")
     if menu(line):
-        save(line)
+        save_to_all_files(line)
 
