@@ -54,8 +54,8 @@ def menu(line):
     elif line in stats_command:
         stat_screen()
     else:
-        return True # was a true line, not a command
-    return False # this was a command line
+        return True  # was a true line, not a command
+    return False  # this was a command line
 
 
 def humanise_timedelta(td):
