@@ -41,7 +41,11 @@ def register_timedata():
 
 def save_oversharing(line):
     file_name = "ooo" + file_name_component + ".md"
-    final_line = (line + "<br>" + (humanise_timedelta(datetime.now()-start_time) + "<br/>"))
+    final_line = (
+        line
+        + "<br>    "
+        + (humanise_timedelta(datetime.now() - start_time) + "<br/><br/>")
+    )
     saving_process(final_line, file_name)
     return
 
@@ -85,7 +89,7 @@ def clear_screen():
 
 # MENU
 def help_screen():
-    print(
+    print("\x1b[1;33;40m" +
         """
           
           BRUTALIST HELP MENU
@@ -97,7 +101,9 @@ def help_screen():
           the texts saves line-by-line
           
           """,
+          "\x1b[0;30;43m",
         session_duration(),
+        "\x1b[0m \n\n"
     )
     return
 
