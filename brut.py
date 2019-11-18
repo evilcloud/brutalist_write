@@ -41,12 +41,11 @@ def register_timedata():
 
 def save_oversharing(line):
     file_name = "ooo" + file_name_component + ".md"
-    final_line = (line + (humanise_timedelta(datetime.now()-start_time) + line + "<br/>"))
+    final_line = (line + "<br>" + (humanise_timedelta(datetime.now()-start_time) + "<br/>"))
     saving_process(final_line, file_name)
     return
 
 
-# TO BE COMPLETED TOMORROW
 def saving_process(final_line, file_name):
     with open(file_name, "a") as target_file:
         target_file.write(final_line)
