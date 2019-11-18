@@ -13,37 +13,36 @@ file_name_component = str(start_time.date())
 # FILE FUNCTIONS
 def save_txt(line):
     file_name = "bas" + file_name_component + ".txt"
-    with open(file_name, "a") as text_file:
-        text_file.write(line + "\n")
+    saving_process(line + "\n", file_name)
+    # with open(file_name, "a") as text_file:
+    #     text_file.write(line + "\n")
     return
 
 
 def save_git_md(line):
     file_name = "gmd" + file_name_component + ".md"
-    with open(file_name, "a") as gitmd_file:
-        gitmd_file.write(line + "<br/>")
+    saving_process(line + "<br/>", file_name)
     return
 
 
 def save_vanila_md(line):
     file_name = "vmd" + file_name_component + ".md"
-    with open(file_name, "a") as vanmd_file:
-        vanmd_file.write(line + "\n")
+    final_line = line + "\n"
+    saving_process(final_line, file_name)
     return
 
 
 def register_timedata():
     file_name = "tds" + file_name_component + ".ser"
-    with open(file_name, "a") as time_file:
-        time_file.write(str(datetime.timestamp(datetime.now())) + "\n")
+    final_line = str(datetime.timestamp(datetime.now())) + "\n"
+    saving_process(final_line, file_name)
     return
 
 
 def save_oversharing(line):
     file_name = "ooo" + file_name_component + ".md"
-    with open(file_name, "a") as overshare:
-        overshare.write("    " + line + "<br/>")
-        overshare.write(humanise_timedelta(datetime.now() - start_time))
+    final_line = (line + (humanise_timedelta(datetime.now()-start_time) + line + "<br/>"))
+    saving_process(final_line, file_name)
     return
 
 
