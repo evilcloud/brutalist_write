@@ -89,8 +89,9 @@ def clear_screen():
 
 # MENU
 def help_screen():
-    print("\x1b[1;33;40m" +
-        """
+    print(
+        "\x1b[1;33;40m"
+        + """
           
           BRUTALIST HELP MENU
           
@@ -101,9 +102,9 @@ def help_screen():
           the texts saves line-by-line
           
           """,
-          "\x1b[0;30;43m",
+        "\x1b[0;30;43m",
         session_duration(),
-        "\x1b[0m \n\n"
+        "\x1b[0m \n\n",
     )
     return
 
