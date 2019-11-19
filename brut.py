@@ -14,16 +14,23 @@ file_name_component = str(start_time.date())
 def save_txt(line):
     file_name = "bas" + file_name_component + ".txt"
     saving_process(line + "\n", file_name)
-    # with open(file_name, "a") as text_file:
-    #     text_file.write(line + "\n")
     return
+
 
 # WORKING ON THIS RIGHT NOW
 def temporary_function():
-    file_line_assets = {"git_md": ["gmd", ".md", "<br/>"],
-                        "vanila_md": ["vmd", ".md", "<br/>"],
-                        "timedata": ["tds", ".ser", str(datetime.timestamp(datetime.now())) + "\n"],
-                        "overshare": ["ooo", ".md", line + "<br/>    " + (humanise_timedelta(datetime.now() - start_time) + "<br/><br/>"]}
+    file_line_assets = {
+        "git_md": ["gmd", ".md", "<br/>"],
+        "vanila_md": ["vmd", ".md", "<br/>"],
+        "timedata": ["tds", ".ser", str(datetime.timestamp(datetime.now())) + "\n"],
+        "overshare": [
+            "ooo",
+            ".md",
+            line
+            + f"<br/>    {(humanise_timedelta(datetime.now() - start_time))}<br/><br/>",
+        ],
+    }
+
 
 def save_git_md(line):
     file_name = "gmd" + file_name_component + ".md"
