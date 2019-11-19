@@ -1,27 +1,95 @@
 from subprocess import call
 from os import name as osname
+from os import path as ospath
+import os.path
 from datetime import date, datetime
 
+# CONFIG
+global start_time
+global file_name_component
+start_time = datetime.now()
+file_name_component = str(start_time.date())
 
-def save(line):
-    file_name = "dbrut" + str(date.today())
-    with open(file_name + ".md", "a") as file:
-        file.write(line + "\n")
-    current_timestamp = datetime.timestamp(datetime.now())
-    with open("zed" + file_name + ".ser", "a") as service_file:
-        service_file.write(str(str(current_timestamp) + "\n"))
+# FILE FUNCTIONS
+def save_txt(line):
+    file_name = "bas" + file_name_component + ".txt"
+    saving_process(line + "\n", file_name)
+    # with open(file_name, "a") as text_file:
+    #     text_file.write(line + "\n")
     return
 
 
+def save_git_md(line):
+    file_name = "gmd" + file_name_component + ".md"
+    saving_process(line + "<br/>", file_name)
+    return
+
+
+def save_vanila_md(line):
+    file_name = "vmd" + file_name_component + ".md"
+    final_line = line + "\n"
+    saving_process(final_line, file_name)
+    return
+
+
+def register_timedata():
+    file_name = "tds" + file_name_component + ".ser"
+    final_line = str(datetime.timestamp(datetime.now())) + "\n"
+    saving_process(final_line, file_name)
+    return
+
+
+def save_oversharing(line):
+    file_name = "ooo" + file_name_component + ".md"
+    final_line = (
+        line
+        + "<br>    "
+        + (humanise_timedelta(datetime.now() - start_time) + "<br/><br/>")
+    )
+    saving_process(final_line, file_name)
+    return
+
+
+def saving_process(final_line, file_name):
+    with open(file_name, "a") as target_file:
+        target_file.write(final_line)
+    return
+
+
+def save_to_all_files(line):
+    save_txt(line)
+    save_git_md(line)
+    save_vanila_md(line)
+    save_oversharing(line)
+    register_timedata()
+    return
+
+
+def save_except_txt(line):
+    save_txt("")
+    save_git_md(line)
+    save_vanila_md(line)
+    save_oversharing(line)
+    register_timedata()
+    return
+
+
+# SYSTEM
 def quit_app():
-    save("---")
+    save_except_txt("⌹")
     print("   " + session_duration())
     print("\nbye")
     quit()
 
 
+def clear_screen():
+    _ = call("cls" if osname == "nt" else "clear")
+    return
+
+
+# MENU
 def help_screen():
-    print(
+    print("\x1b[1;33;40m" +
         """
           
           BRUTALIST HELP MENU
@@ -33,7 +101,9 @@ def help_screen():
           the texts saves line-by-line
           
           """,
+          "\x1b[0;30;43m",
         session_duration(),
+        "\x1b[0m \n\n"
     )
     return
 
@@ -44,7 +114,7 @@ def stat_screen():
 
 
 def menu(line):
-    quit_command = ["quit()", "....."]
+    quit_command = ["quit()", "exit()", "....."]
     help_command = ["help()", "?????"]
     stats_command = ["stats()", "/////"]
     if line in quit_command:
@@ -58,6 +128,7 @@ def menu(line):
     return False  # this was a command line
 
 
+# DATAPROC
 def humanise_timedelta(td):
     days = td.days
     hours, remainder = divmod(td.seconds, 3600)
@@ -81,22 +152,23 @@ def session_duration():
     return "session duration: " + humanise_timedelta(sess_dur)
 
 
-def clear_screen():
-    _ = call("cls" if osname == "nt" else "clear")
-    return
+def first_line(check_file):
+    if os.path.exists(check_file):
+        opening_line = "⌸" + " " * 15 + str(start_time.time().replace(microsecond=0))
+    else:
+        opening_line = "⌷   " + str(start_time.replace(microsecond=0))
+    return opening_line
 
 
-# humanise_timedelta(datetime.now())
 # MAIN
-global start_time
-start_time = datetime.now()
+# INITIALIZE
 clear_screen()
-save("***")
-save("[" + str(datetime.now()) + "]")
-save("")
+save_except_txt(first_line("tds" + file_name_component + ".ser"))
+save_to_all_files("")
+
+# TEXT ENTRY
 while True:
     line = input("    ")
     print("\n\n")
     if menu(line):
-        save(line)
-
+        save_to_all_files(line)
