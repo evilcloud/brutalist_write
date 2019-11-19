@@ -18,6 +18,12 @@ def save_txt(line):
     #     text_file.write(line + "\n")
     return
 
+# WORKING ON THIS RIGHT NOW
+def temporary_function():
+    file_line_assets = {"git_md": ["gmd", ".md", "<br/>"],
+                        "vanila_md": ["vmd", ".md", "<br/>"],
+                        "timedata": ["tds", ".ser", str(datetime.timestamp(datetime.now())) + "\n"],
+                        "overshare": ["ooo", ".md", line + "<br/>    " + (humanise_timedelta(datetime.now() - start_time) + "<br/><br/>"]}
 
 def save_git_md(line):
     file_name = "gmd" + file_name_component + ".md"
@@ -115,18 +121,16 @@ def stat_screen():
 
 
 def menu(line):
-    quit_command = ["quit()", "exit()", "....."]
-    help_command = ["help()", "?????"]
-    stats_command = ["stats()", "/////"]
-    if line in quit_command:
-        quit_app()
-    elif line in help_command:
-        help_screen()
-    elif line in stats_command:
-        stat_screen()
+    commands = {
+        ".....": "quit_app()",
+        "?????": "help_screen()",
+        "/////": "stat_screen()",
+    }
+    if line in commands:
+        eval(commands[line])
     else:
-        return True  # was a true line, not a command
-    return False  # this was a command line
+        return True
+    return False
 
 
 # DATAPROC
