@@ -1,96 +1,47 @@
 from subprocess import call
 from os import name as osname
-from os import path as ospath
-import os.path
 from datetime import date, datetime
+import csv
 
 # CONFIG
-global start_time
-global file_name_component
-start_time = datetime.now()
-file_name_component = str(start_time.date())
+global session_start_time
+global session_date
+session_start_time = datetime.now()
+session_date = str(session_start_time.date())
 
 # FILE FUNCTIONS
-def save_txt(line):
-    file_name = "bas" + file_name_component + ".txt"
-    saving_process(line + "\n", file_name)
-    # with open(file_name, "a") as text_file:
-    #     text_file.write(line + "\n")
-    return
-
-
-def save_git_md(line):
-    file_name = "gmd" + file_name_component + ".md"
-    saving_process(line + "<br/>", file_name)
-    return
-
-
-def save_vanila_md(line):
-    file_name = "vmd" + file_name_component + ".md"
-    final_line = line + "\n"
-    saving_process(final_line, file_name)
-    return
-
-
-def register_timedata():
-    file_name = "tds" + file_name_component + ".ser"
-    final_line = str(datetime.timestamp(datetime.now())) + "\n"
-    saving_process(final_line, file_name)
-    return
-
-
-def save_oversharing(line):
-    file_name = "ooo" + file_name_component + ".md"
-    final_line = (
-        line
-        + "<br>    "
-        + (humanise_timedelta(datetime.now() - start_time) + "<br/><br/>")
-    )
-    saving_process(final_line, file_name)
-    return
-
-
-def saving_process(final_line, file_name):
-    with open(file_name, "a") as target_file:
-        target_file.write(final_line)
-    return
-
-
-def save_to_all_files(line):
-    save_txt(line)
-    save_git_md(line)
-    save_vanila_md(line)
-    save_oversharing(line)
-    register_timedata()
-    return
-
-
-def save_except_txt(line):
-    save_txt("")
-    save_git_md(line)
-    save_vanila_md(line)
-    save_oversharing(line)
-    register_timedata()
+def save_line(line):
+    file_name = str(session_date) + ".bru"
+    with open(file_name, "a") as file:
+        writer = csv.writer(file)
+        writer.writerow(line)
     return
 
 
 # SYSTEM
-def quit_app():
-    save_except_txt("⌹")
-    print("   " + session_duration())
-    print("\nbye")
-    quit()
-
-
 def clear_screen():
     _ = call("cls" if osname == "nt" else "clear")
     return
 
 
+def quit_app():
+    save_line(["⌹", str(datetime.timestamp(datetime.now()))])
+    print("   " + session_duration())
+    print("\nbye")
+    quit()
+
+
+# DOESN'T WORK FOR SOME REASON
+# def timestamp_line():
+#     timestamped_line = str(datetime.timestamp(datetime.now()))
+#     return timestamped_line
+
+
 # MENU
 def help_screen():
-    print("\x1b[1;33;40m" +
-        """
+    print(
+        "\x1b[1;33;40m"
+        + """
           
           BRUTALIST HELP MENU
           
@@ -101,9 +52,9 @@ def help_screen():
           the texts saves line-by-line
           
           """,
-          "\x1b[0;30;43m",
+        "\x1b[0;30;43m",
         session_duration(),
-        "\x1b[0m \n\n"
+        "\x1b[0m \n\n",
     )
     return
 
@@ -114,18 +65,16 @@ def stat_screen():
 
 
 def menu(line):
-    quit_command = ["quit()", "exit()", "....."]
-    help_command = ["help()", "?????"]
-    stats_command = ["stats()", "/////"]
-    if line in quit_command:
-        quit_app()
-    elif line in help_command:
-        help_screen()
-    elif line in stats_command:
-        stat_screen()
+    commands = {
+        ".....": "quit_app()",
+        "?????": "help_screen()",
+        "/////": "stat_screen()",
+    }
+    if line in commands:
+        eval(commands[line])
     else:
-        return True  # was a true line, not a command
-    return False  # this was a command line
+        return True
+    return False
 
 
 # DATAPROC
@@ -148,27 +97,18 @@ def humanise_timedelta(td):
 def session_duration():
     """Returns [str] "session duration: [huminized time]
     gets data from [huminise_timedelta]"""
-    sess_dur = datetime.now() - start_time
+    sess_dur = datetime.now() - session_start_time
     return "session duration: " + humanise_timedelta(sess_dur)
 
 
-def first_line(check_file):
-    if os.path.exists(check_file):
-        opening_line = "⌸" + " " * 15 + str(start_time.time().replace(microsecond=0))
-    else:
-        opening_line = "⌷   " + str(start_time.replace(microsecond=0))
-    return opening_line
-
-
 # MAIN
-# INITIALIZE
 clear_screen()
-save_except_txt(first_line("tds" + file_name_component + ".ser"))
-save_to_all_files("")
+save_line(["⌸", str(datetime.timestamp(datetime.now()))])
 
 # TEXT ENTRY
 while True:
     line = input("    ")
     print("\n\n")
     if menu(line):
-        save_to_all_files(line)
+        csv_line = [str(datetime.timestamp(datetime.now())), line]
+        save_line(csv_line)
