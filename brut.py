@@ -3,7 +3,7 @@ from os import name as osname
 from datetime import date, datetime
 import csv
 
-# CONFIG   
+# CONFIG 
 global session_start_time
 global session_date
 session_start_time = datetime.now()
